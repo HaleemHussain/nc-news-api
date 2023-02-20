@@ -4,5 +4,7 @@ Your database will be PSQL, and you will interact with it using [node-postgres](
 
 
 
-to use this project you will have to set the .env.test and .env.dev files.
+To use this project you will have to set the .env.test and .env.development files to PGDATABASE=database_name_here.
+
+Then run the setup.sql file using the command 'npm run setup-dbs' in the package.json file set in the scripts.
 
