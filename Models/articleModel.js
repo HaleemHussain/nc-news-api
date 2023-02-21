@@ -9,7 +9,7 @@ exports.selectArticles = () => {
                        articles.created_at,
                        articles.votes,
                        articles.article_img_url,
-                       COUNT(comments.comment_id) AS comment_count
+                       COUNT(comments.comment_id):: INT AS comment_count
                 FROM articles
                          LEFT JOIN comments ON articles.article_id = comments.article_id
                 GROUP BY articles.article_id
@@ -23,7 +23,7 @@ exports.selectArticles = () => {
                 created_at: article.created_at,
                 votes: article.votes,
                 article_img_url: article.article_img_url,
-                comment_count: parseInt(article.comment_count)
+                comment_count: article.comment_count
             }));
         });
 }
