@@ -72,7 +72,6 @@ describe('app', () => {
                     expect(article.article_id).toBe(1);
                     expect(article).toHaveProperty('author', expect.any(String))
                     expect(article).toHaveProperty('title', expect.any(String))
-                    expect(article).toHaveProperty('article_id', expect.any(Number))
                     expect(article).toHaveProperty('body', expect.any(String))
                     expect(article).toHaveProperty('topic', expect.any(String))
                     expect(article).toHaveProperty('created_at', expect.any(String))
