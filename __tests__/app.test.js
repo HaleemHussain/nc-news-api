@@ -25,6 +25,18 @@ describe('app', () => {
         })
     })
 
+    describe('/api/not-an-endpoint', () => {
+        test("should respond with 404 not found if given incorrect path", () => {
+            return request(app)
+                .get("/api/not-an-endpoint")
+                .expect(404)
+                .then(({body}) => {
+                    const {msg} = body;
+                    expect(msg).toBe("not found");
+                });
+        });
+    })
+
     describe('/api/topics', () => {
         test("should respond with a json object of topics", () => {
             return request(app)
@@ -85,8 +97,8 @@ describe('app', () => {
             return request(app)
                 .get("/api/articles/notanid")
                 .expect(400)
-                .then(({ body }) => {
-                    const { msg } = body;
+                .then(({body}) => {
+                    const {msg} = body;
                     expect(msg).toBe("bad request");
                 });
         });
@@ -94,21 +106,47 @@ describe('app', () => {
             return request(app)
                 .get("/api/articles/646464")
                 .expect(404)
-                .then(({ body }) => {
-                    const { msg } = body;
+                .then(({body}) => {
+                    const {msg} = body;
                     expect(msg).toBe("No article found for article_id: 646464");
                 });
         });
     })
 
-    describe('error handling', () => {
-        test("should respond with 404 not found if given incorrect path", () => {
+    describe('/api/articles/:article_id/comments', () => {
+        test("should respond with a json object of an comments", () => {
             return request(app)
-                .get("/api/not-an-endpoint")
+                .get("/api/articles/1/comments")
+                .expect(200)
+                .then(({body}) => {
+                    const {comments} = body;
+                    expect(comments).toHaveLength(11)
+                    comments.forEach((comment) => {
+                        expect(comment).toHaveProperty('comment_id', expect.any(Number))
+                        expect(comment).toHaveProperty('votes', expect.any(Number))
+                        expect(comment).toHaveProperty('created_at', expect.any(String))
+                        expect(comment).toHaveProperty('author', expect.any(String))
+                        expect(comment).toHaveProperty('body', expect.any(String))
+                        expect(comment).toHaveProperty('article_id', expect.any(Number))
+                    })
+                })
+        });
+        test("invalid ID: 400 Bad Request", () => {
+            return request(app)
+                .get("/api/articles/notanid/comments")
+                .expect(400)
+                .then(({body}) => {
+                    const {msg} = body;
+                    expect(msg).toBe("bad request");
+                });
+        });
+        test("resource that does not exist: 404 Not Found", () => {
+            return request(app)
+                .get("/api/articles/646464/comments")
                 .expect(404)
                 .then(({body}) => {
                     const {msg} = body;
-                    expect(msg).toBe("not found");
+                    expect(msg).toBe("No comments found for article_id: 646464");
                 });
         });
     })
