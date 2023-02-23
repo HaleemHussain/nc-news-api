@@ -1,4 +1,4 @@
-const {selectArticles, selectArticleById} = require('../models/articleModel')
+const {selectArticles, selectArticleById} = require('../Models/articleModel')
 
 exports.getAllArticles = (req, res, next) => {
     selectArticles()
