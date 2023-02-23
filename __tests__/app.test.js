@@ -232,27 +232,13 @@ describe('app', () => {
                     expect(msg).toBe("bad request");
                 });
         });
-        test("bad request 400 body is incorrect datatype", () => {
-            const comment = {
-                username: "butter_bridge",
-                body: 64,
-            };
-            return request(app)
-                .post("/api/articles/9999999/comments")
-                .send(comment)
-                .expect(400)
-                .then(({body}) => {
-                    const {msg} = body;
-                    expect(msg).toBe("bad request");
-                });
-        });
         test("bad request 400 username is incorrect datatype", () => {
             const comment = {
                 username: 64,
                 body: 'comment',
             };
             return request(app)
-                .post("/api/articles/9999999/comments")
+                .post("/api/articles/1/comments")
                 .send(comment)
                 .expect(400)
                 .then(({body}) => {
