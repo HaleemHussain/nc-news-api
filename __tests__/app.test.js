@@ -181,7 +181,7 @@ describe('app', () => {
                         }))
                 });
         });
-        test("bad request code 400 not a valid user", () => {
+        test("bad request code 404 not a valid user", () => {
             const comment = {
                 username: "mike",
                 body: "comment",
@@ -189,14 +189,14 @@ describe('app', () => {
             return request(app)
                 .post("/api/articles/1/comments")
                 .send(comment)
-                .expect(400)
+                .expect(404)
                 .then(({body}) => {
                     const {msg} = body;
-                    expect(msg).toBe("bad request");
+                    expect(msg).toBe("not found");
                 });
         });
 
-        test("bad request 400 invalid articleID", () => {
+        test("bad request 404 invalid articleID", () => {
             const comment = {
                 username: "mike",
                 body: "comment"
@@ -204,12 +204,13 @@ describe('app', () => {
             return request(app)
                 .post("/api/articles/9999999/comments")
                 .send(comment)
-                .expect(400)
+                .expect(404)
                 .then(({body}) => {
                     const {msg} = body;
-                    expect(msg).toBe("bad request");
+                    expect(msg).toBe("not found");
                 });
         });
+
         test("bad request 400 missing some input fields", () => {
             const comment = {body: 'comment'};
             return request(app)
@@ -232,7 +233,7 @@ describe('app', () => {
                     expect(msg).toBe("bad request");
                 });
         });
-        test("bad request 400 username is incorrect datatype", () => {
+        test("bad request 404 username is incorrect datatype", () => {
             const comment = {
                 username: 64,
                 body: 'comment',
@@ -240,10 +241,10 @@ describe('app', () => {
             return request(app)
                 .post("/api/articles/1/comments")
                 .send(comment)
-                .expect(400)
+                .expect(404)
                 .then(({body}) => {
                     const {msg} = body;
-                    expect(msg).toBe("bad request");
+                    expect(msg).toBe("not found");
                 });
         });
     })
