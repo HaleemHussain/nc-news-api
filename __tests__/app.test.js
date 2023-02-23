@@ -91,8 +91,7 @@ describe('app', () => {
                     expect(article).toHaveProperty('article_img_url', expect.any(String))
                 });
         })
-        //404 non existent id
-        //400 not a number
+
         test("invalid ID: 400 Bad Request", () => {
             return request(app)
                 .get("/api/articles/notanid")
@@ -147,6 +146,15 @@ describe('app', () => {
                 .then(({body}) => {
                     const {msg} = body;
                     expect(msg).toBe("No comments found for article_id: 646464");
+                });
+        });
+        test("no comments for an article that exists 404 Not Found", () => {
+            return request(app)
+                .get("/api/articles/2/comments")
+                .expect(404)
+                .then(({body}) => {
+                    const {msg} = body;
+                    expect(msg).toBe("No comments found for article_id: 2");
                 });
         });
     })
