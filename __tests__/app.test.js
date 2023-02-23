@@ -14,7 +14,7 @@ beforeEach(() => {
 });
 
 describe('app', () => {
-    describe('/api', () => {
+    describe('GET /api', () => {
         test("should respond with a json object with a message key", () => {
             return request(app)
                 .get('/api')
@@ -25,7 +25,7 @@ describe('app', () => {
         })
     })
 
-    describe('/api/not-an-endpoint', () => {
+    describe('GET /api/not-an-endpoint', () => {
         test("should respond with 404 not found if given incorrect path", () => {
             return request(app)
                 .get("/api/not-an-endpoint")
@@ -37,7 +37,7 @@ describe('app', () => {
         });
     })
 
-    describe('/api/topics', () => {
+    describe('GET /api/topics', () => {
         test("should respond with a json object of topics", () => {
             return request(app)
                 .get('/api/topics')
@@ -52,7 +52,7 @@ describe('app', () => {
         })
     })
 
-    describe('/api/articles', () => {
+    describe('GET /api/articles', () => {
         test("should respond with a json object of articles", () => {
             return request(app)
                 .get('/api/articles')
@@ -74,7 +74,7 @@ describe('app', () => {
         })
     })
 
-    describe('/api/articles/:article_id', () => {
+    describe('GET /api/articles/:article_id', () => {
         test("should respond with a json object of an article", () => {
             return request(app)
                 .get("/api/articles/1")
@@ -112,7 +112,7 @@ describe('app', () => {
         });
     })
 
-    describe('/api/articles/:article_id/comments', () => {
+    describe('GET /api/articles/:article_id/comments', () => {
         test("should respond with a json object of an comments", () => {
             return request(app)
                 .get("/api/articles/1/comments")
@@ -155,6 +155,109 @@ describe('app', () => {
                 .then(({body}) => {
                     const {msg} = body;
                     expect(msg).toBe("No comments found for article_id: 2");
+                });
+        });
+    })
+    describe("POST /api/articles/:article_id/comments", () => {
+        test('comment is posted and the response is the comment 201', () => {
+            const userComment = {
+                username: "butter_bridge",
+                body: "wow comment"
+            }
+            return request(app)
+                .post('/api/articles/1/comments')
+                .send(userComment)
+                .expect(201)
+                .then(({body}) => {
+                    const {comment} = body;
+                    expect(comment).toMatchObject(
+                        expect.objectContaining({
+                            article_id: 1,
+                            author: "butter_bridge",
+                            body: "wow comment",
+                            comment_id: 19,
+                            created_at: expect.any(String),
+                            votes: 0,
+                        }))
+                });
+        });
+        test("bad request code 400 not a valid user", () => {
+            const comment = {
+                username: "mike",
+                body: "comment",
+            };
+            return request(app)
+                .post("/api/articles/1/comments")
+                .send(comment)
+                .expect(400)
+                .then(({body}) => {
+                    const {msg} = body;
+                    expect(msg).toBe("bad request");
+                });
+        });
+
+        test("bad request 400 invalid articleID", () => {
+            const comment = {
+                username: "mike",
+                body: "comment"
+            };
+            return request(app)
+                .post("/api/articles/9999999/comments")
+                .send(comment)
+                .expect(400)
+                .then(({body}) => {
+                    const {msg} = body;
+                    expect(msg).toBe("bad request");
+                });
+        });
+        test("bad request 400 missing some input fields", () => {
+            const comment = {body: 'comment'};
+            return request(app)
+                .post("/api/articles/1/comments")
+                .send(comment)
+                .expect(400)
+                .then(({body}) => {
+                    const {msg} = body;
+                    expect(msg).toBe("bad request");
+                });
+        });
+        test("bad request 400 missing all input fields", () => {
+            const comment = {};
+            return request(app)
+                .post("/api/articles/1/comments")
+                .send(comment)
+                .expect(400)
+                .then(({body}) => {
+                    const {msg} = body;
+                    expect(msg).toBe("bad request");
+                });
+        });
+        test("bad request 400 body is incorrect datatype", () => {
+            const comment = {
+                username: "butter_bridge",
+                body: 64,
+            };
+            return request(app)
+                .post("/api/articles/9999999/comments")
+                .send(comment)
+                .expect(400)
+                .then(({body}) => {
+                    const {msg} = body;
+                    expect(msg).toBe("bad request");
+                });
+        });
+        test("bad request 400 username is incorrect datatype", () => {
+            const comment = {
+                username: 64,
+                body: 'comment',
+            };
+            return request(app)
+                .post("/api/articles/9999999/comments")
+                .send(comment)
+                .expect(400)
+                .then(({body}) => {
+                    const {msg} = body;
+                    expect(msg).toBe("bad request");
                 });
         });
     })
