@@ -1,6 +1,6 @@
 const express = require('express');
-const {getAllTopics} = require('./controllers/topicsController')
-const {getCommentsByArticleId} = require('./controllers/commentsController')
+const {getAllTopics} = require('./Controllers/topicsController')
+const {getCommentsByArticleId} = require('./Controllers/commentsController')
 const {getAllArticles, getArticleById} = require('./Controllers/articlesController')
 const {handleServerErrors, handles404NotFoundErrors, handlesPSQLErrors, handlesCustomErrors} = require('./errors/errorHandling.js');
 
