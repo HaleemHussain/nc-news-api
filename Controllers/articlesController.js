@@ -25,7 +25,7 @@ exports.patchArticle = (req, res, next) => {
     const {article_id} = req.params;
     updateArticle(article_id, req.body)
         .then((result) => {
-            res.status(201).send({article: result})
+            res.status(200).send({article: result})
         })
         .catch((err) => {
             next(err)

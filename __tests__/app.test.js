@@ -249,14 +249,14 @@ describe('app', () => {
         });
     })
     describe("PATCH /api/artices/:articled_id", () => {
-        test("article up-voted by 1 status 201 response is updated article", () => {
+        test("article up-voted by 1 status 200 response is updated article", () => {
             const updatedArticle = {
                 inc_votes: 1,
             };
             return request(app)
                 .patch("/api/articles/1")
                 .send(updatedArticle)
-                .expect(201)
+                .expect(200)
                 .then(({ body }) => {
                     const { article } = body;
                     expect(article).toEqual({
@@ -271,14 +271,14 @@ describe('app', () => {
                     });
                 });
         });
-        test("article down-voted by 1 status 201 response is updated article", () => {
+        test("article down-voted by 1 status 200 response is updated article", () => {
             const updatedArticle = {
                 inc_votes: -1,
             };
             return request(app)
                 .patch("/api/articles/1")
                 .send(updatedArticle)
-                .expect(201)
+                .expect(200)
                 .then(({ body }) => {
                     const { article } = body;
                     expect(article).toEqual({
@@ -304,6 +304,19 @@ describe('app', () => {
                 .then(({body}) => {
                     const {msg} = body;
                     expect(msg).toBe("not found");
+                });
+        });
+        test("invalid ID: 400 Bad Request id not a number", () => {
+            const updatedArticle = {
+                inc_votes: "1",
+            };
+            return request(app)
+                .patch("/api/articles/notanid")
+                .send(updatedArticle)
+                .expect(400)
+                .then(({body}) => {
+                    const {msg} = body;
+                    expect(msg).toBe("bad request");
                 });
         });
         test("bad request 400 inc_votes is incorrect datatype", () => {
