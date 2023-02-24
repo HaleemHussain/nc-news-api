@@ -181,7 +181,7 @@ describe('app', () => {
                         }))
                 });
         });
-        test("bad request code 404 not a valid user", () => {
+        test("not found code 404 not a valid user", () => {
             const comment = {
                 username: "mike",
                 body: "comment",
@@ -196,7 +196,7 @@ describe('app', () => {
                 });
         });
 
-        test("bad request 404 invalid articleID", () => {
+        test("not found 404 invalid articleID", () => {
             const comment = {
                 username: "mike",
                 body: "comment"
@@ -248,4 +248,87 @@ describe('app', () => {
                 });
         });
     })
+    describe("PATCH /api/artices/:articled_id", () => {
+        test("article up-voted by 1 status 201 response is updated article", () => {
+            const updatedArticle = {
+                inc_votes: 1,
+            };
+            return request(app)
+                .patch("/api/articles/1")
+                .send(updatedArticle)
+                .expect(201)
+                .then(({ body }) => {
+                    const { article } = body;
+                    expect(article).toEqual({
+                        article_id: 1,
+                        article_img_url: "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+                        title: "Living in the shadow of a great man",
+                        topic: "mitch",
+                        author: "butter_bridge",
+                        body: "I find this existence challenging",
+                        created_at: expect.any(String),
+                        votes: 101,
+                    });
+                });
+        });
+        test("article down-voted by 1 status 201 response is updated article", () => {
+            const updatedArticle = {
+                inc_votes: -1,
+            };
+            return request(app)
+                .patch("/api/articles/1")
+                .send(updatedArticle)
+                .expect(201)
+                .then(({ body }) => {
+                    const { article } = body;
+                    expect(article).toEqual({
+                        article_id: 1,
+                        article_img_url: "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+                        title: "Living in the shadow of a great man",
+                        topic: "mitch",
+                        author: "butter_bridge",
+                        body: "I find this existence challenging",
+                        created_at: expect.any(String),
+                        votes: 99,
+                    });
+                });
+        });
+        test("not found 404 invalid articleID", () => {
+            const updatedArticle = {
+                inc_votes: "string",
+            };
+            return request(app)
+                .post("/api/articles/1")
+                .send(updatedArticle)
+                .expect(404)
+                .then(({body}) => {
+                    const {msg} = body;
+                    expect(msg).toBe("not found");
+                });
+        });
+        test("bad request 400 inc_votes is incorrect datatype", () => {
+            const updatedArticle = {
+                inc_votes: "string",
+            };
+            return request(app)
+                .patch("/api/articles/1")
+                .send(updatedArticle)
+                .expect(400)
+                .then(({ body }) => {
+                    const { msg } = body;
+                    expect(msg).toBe("bad request");
+                });
+        });
+        test("bad request 400 no body missing input field", () => {
+            const updatedArticle = {};
+            return request(app)
+                .patch("/api/articles/1")
+                .send(updatedArticle)
+                .expect(400)
+                .then(({ body }) => {
+                    const { msg } = body;
+                    expect(msg).toBe("bad request");
+                });
+        });
+    });
 })
