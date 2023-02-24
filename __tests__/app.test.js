@@ -295,10 +295,10 @@ describe('app', () => {
         });
         test("not found 404 invalid articleID", () => {
             const updatedArticle = {
-                inc_votes: "string",
+                inc_votes: "1",
             };
             return request(app)
-                .post("/api/articles/1")
+                .post("/api/articles/9999999")
                 .send(updatedArticle)
                 .expect(404)
                 .then(({body}) => {
