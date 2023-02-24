@@ -26,7 +26,7 @@ exports.selectArticles = () => {
                 comment_count: article.comment_count
             }));
         });
-}
+};
 
 exports.selectArticleById = (article_id) => {
     return db
@@ -43,7 +43,7 @@ exports.selectArticleById = (article_id) => {
             }
             return article;
         });
-}
+};
 
 exports.updateArticle = (article_id, input) => {
     return db.query(`UPDATE articles
