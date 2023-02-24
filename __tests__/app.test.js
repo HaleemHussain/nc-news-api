@@ -21,9 +21,9 @@ describe('app', () => {
                 .expect(200)
                 .then((response) => {
                     expect(response.body.msg).toBe('all ok')
-                })
-        })
-    })
+                });
+        });
+    });
 
     describe('GET /api/not-an-endpoint', () => {
         test("should respond with 404 not found if given incorrect path", () => {
@@ -35,7 +35,7 @@ describe('app', () => {
                     expect(msg).toBe("not found");
                 });
         });
-    })
+    });
 
     describe('GET /api/topics', () => {
         test("should respond with a json object of topics", () => {
@@ -47,10 +47,10 @@ describe('app', () => {
                     topics.forEach((topic) => {
                         expect(topic).toHaveProperty('description', expect.any(String))
                         expect(topic).toHaveProperty('slug', expect.any(String))
-                    })
-                })
-        })
-    })
+                    });
+                });
+        });
+    });
 
     describe('GET /api/articles', () => {
         test("should respond with a json object of articles", () => {
@@ -69,10 +69,10 @@ describe('app', () => {
                         expect(article).toHaveProperty('votes', expect.any(Number))
                         expect(article).toHaveProperty('article_img_url', expect.any(String))
                         expect(article).toHaveProperty('comment_count', expect.any(Number))
-                    })
-                })
-        })
-    })
+                    });
+                });
+        });
+    });
 
     describe('GET /api/articles/:article_id', () => {
         test("should respond with a json object of an article", () => {
@@ -90,7 +90,7 @@ describe('app', () => {
                     expect(article).toHaveProperty('votes', expect.any(Number))
                     expect(article).toHaveProperty('article_img_url', expect.any(String))
                 });
-        })
+        });
 
         test("invalid ID: 400 Bad Request", () => {
             return request(app)
@@ -110,7 +110,7 @@ describe('app', () => {
                     expect(msg).toBe("No article found for article_id: 646464");
                 });
         });
-    })
+    });
 
     describe('GET /api/articles/:article_id/comments', () => {
         test("should respond with a json object of an comments", () => {
@@ -127,8 +127,8 @@ describe('app', () => {
                         expect(comment).toHaveProperty('author', expect.any(String))
                         expect(comment).toHaveProperty('body', expect.any(String))
                         expect(comment).toHaveProperty('article_id', expect.any(Number))
-                    })
-                })
+                    });
+                });
         });
         test("invalid ID: 400 Bad Request", () => {
             return request(app)
@@ -157,7 +157,7 @@ describe('app', () => {
                     expect(msg).toBe("No comments found for article_id: 2");
                 });
         });
-    })
+    });
     describe("POST /api/articles/:article_id/comments", () => {
         test('comment is posted and the response is the comment 201', () => {
             const userComment = {
@@ -178,7 +178,7 @@ describe('app', () => {
                             comment_id: 19,
                             created_at: expect.any(String),
                             votes: 0,
-                        }))
+                        }));
                 });
         });
         test("not found code 404 not a valid user", () => {
@@ -247,7 +247,7 @@ describe('app', () => {
                     expect(msg).toBe("not found");
                 });
         });
-    })
+    });
     describe("PATCH /api/artices/:articled_id", () => {
         test("article up-voted by 1 status 200 response is updated article", () => {
             const updatedArticle = {
@@ -344,4 +344,19 @@ describe('app', () => {
                 });
         });
     });
-})
+    describe('GET /api/users', () => {
+        test("should respond with a json object of users", () => {
+            return request(app)
+                .get('/api/users')
+                .expect(200)
+                .then(({body}) => {
+                    const {users} = body;
+                    users.forEach((user) => {
+                        expect(user).toHaveProperty('username', expect.any(String))
+                        expect(user).toHaveProperty('name', expect.any(String))
+                        expect(user).toHaveProperty('avatar_url', expect.any(String))
+                    });
+                });
+        });
+    });
+});

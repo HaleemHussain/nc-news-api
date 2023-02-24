@@ -1,7 +1,8 @@
 const express = require('express');
-const {getAllTopics} = require('./Controllers/topicsController')
-const {getCommentsByArticleId, postComment} = require('./Controllers/commentsController')
-const {getAllArticles, getArticleById, patchArticle} = require('./Controllers/articlesController')
+const {getAllUsers} = require('./Controllers/usersController');
+const {getAllTopics} = require('./Controllers/topicsController');
+const {getCommentsByArticleId, postComment} = require('./Controllers/commentsController');
+const {getAllArticles, getArticleById, patchArticle} = require('./Controllers/articlesController');
 const {handleServerErrors, handles404NotFoundErrors, handlesPSQLErrors, handlesCustomErrors} = require('./errors/errorHandling.js');
 
 const app = express()
@@ -15,6 +16,8 @@ app.get('/api', (req, res) => {
 app.get('/api/topics', getAllTopics)
 
 app.get('/api/articles', getAllArticles)
+
+app.get('/api/users', getAllUsers)
 
 app.get('/api/articles/:article_id', getArticleById)
 
