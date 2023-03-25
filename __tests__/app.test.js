@@ -14,13 +14,15 @@ beforeEach(() => {
 });
 
 describe('app', () => {
-    describe('GET /api', () => {
-        test("should respond with a json object with a message key", () => {
+    describe("GET /api", () => {
+        test("200: responds with endpoints object", () => {
             return request(app)
-                .get('/api')
+                .get("/api")
                 .expect(200)
-                .then((response) => {
-                    expect(response.body.msg).toBe('all ok')
+                .then(({ type, body }) => {
+                    const { endpoints } = body;
+                    expect(endpoints).toEqual(endpoints);
+                    expect(type).toBe("application/json");
                 });
         });
     });

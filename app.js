@@ -5,6 +5,7 @@ const {getAllTopics} = require('./Controllers/topicsController');
 const {getCommentsByArticleId, postComment, deleteCommentById} = require('./Controllers/commentsController');
 const {getAllArticles, getArticleById, patchArticle} = require('./Controllers/articlesController');
 const {handleServerErrors, handles404NotFoundErrors, handlesPSQLErrors, handlesCustomErrors} = require('./errors/errorHandling.js');
+const {getEndpoints} = require("./Controllers/endpointController");
 
 const app = express()
 
@@ -12,9 +13,7 @@ app.use(cors());
 
 app.use(express.json());
 
-app.get('/api', (req, res) => {
-    res.status(200).send({msg: "all ok"})
-})
+app.get('/api',getEndpoints)
 
 app.get('/api/topics', getAllTopics)
 
