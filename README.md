@@ -4,6 +4,8 @@ This API is for a news website. It has the functionality to access and manipulat
 
 This API is built with Node.js and Express. The data is stored in PostgreSQL Database. It is hosted on render and can be accessed at: https://nc-news-o54u.onrender.com/api
 
+The Frontend is hosted at https://haleemnews.netlify.app/.
+
 ## Installation
 
 ### Requirements
